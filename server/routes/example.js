@@ -6,43 +6,46 @@ const exampleService = new ExampleService();
 const router = express.Router()
 
 router.get('/', async (req, res, next) => {
-  //const { _id, skip, limit, category } = req.query
+  //const { id, skip, limit, field } = req.query
 
   try {
-    //const data = await exampleService.getExamples({ _id, field, skip, limit })
-    const test = await exampleService.test()
+    //const data = await exampleService.getExampless({ id, skip, limit, field })
+    const data = await exampleService.test()
 
-    res.status(200).json(test)
-  } catch(err) {
-    next(err)
-  }
-})
-
-router.post('/', async (req, res, next) => {
-  const { body: example } = req
-
-  try {
-    const createdExample = await exampleService.createExample({ example })
-  
-    res.status(201).json({
-      message: 'Example created',
-      data: createdExample
+    res.status(200).json({
+      message: 'Exampless litened',
+      data
     })
   } catch(err) {
     next(err)
   }
 })
 
-router.put('/:exampleId', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
+  const { body: _data } = req
+
+  try {
+    const data = await exampleService.createExampless({ _data })
+  
+    res.status(201).json({
+      message: 'Example created',
+      data
+    })
+  } catch(err) {
+    next(err)
+  }
+})
+
+router.put('/:id', async (req, res, next) => {
     const { id } = req.params
-    const { body: data } = req
+    const { body: _data } = req
 
     try {
-      const updatedExample = await exampleService.updateExample({ id, data })
+      const data = await exampleService.updateExampless({ id, data: _data })
     
       res.status(200).json({
-        data: updatedExample,
-        message: 'example updated'
+        message: 'example updated',
+        data
       })
     } catch(err) {
       next(err)
@@ -50,17 +53,15 @@ router.put('/:exampleId', async (req, res, next) => {
   }
 )
 
-router.delete(
-  '/:exampleId',
-  async (req, res, next) => {
-  const { exampleId } = req.params
+router.delete('/:id', async (req, res, next) => {
+  const { id } = req.params
   
   try {
-    const deletedExample = await exampleService.deleteExample({ exampleId })
+    const data = await exampleService.deleteExampless(id)
   
     res.status(200).json({
-      data: deletedExample,
-      message: 'example deleted'
+      message: 'Example deleted',
+      data
     })
   } catch(err) {
     next(err)
