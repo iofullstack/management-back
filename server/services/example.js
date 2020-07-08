@@ -1,0 +1,43 @@
+const MongoLib = require('../lib/mongo')
+
+class Examples {
+  constructor() {
+    this.collection = 'test'
+    this.mongoDB = new MongoLib()
+  }
+
+  async test() {
+    const test = await this.mongoDB.test_connection(this.collection)
+    return test || {}
+  }
+
+  async getExamples({ _id, category, skip, limit } = {}) {
+    const query = _id ? category ? { _id, category } : { _id } : category ? { category } : {}
+    const examples = await this.mongoDB.getAll(this.collection, { query, skip, limit })
+    return examples || []
+  }
+
+  async createExample({ example }) {
+    const createExampleId = await this.mongoDB.create(this.collection, example)
+    return createExampleId
+  }
+
+  async updateExample({ exampleId, example }) {
+    const updateExampleId = await this.mongoDB.update(
+      this.collection,
+      exampleId,
+      example
+    )
+    return updateExampleId
+  }
+
+  async deleteExample({ exampleId }) {
+    const deletedExampleId = await this.mongoDB.delete(
+      this.collection,
+      exampleId
+    )
+    return deletedExampleId
+  }
+}
+
+export default Examples
