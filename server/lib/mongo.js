@@ -71,12 +71,17 @@ class MongoLib {
       .then(result => result.insertedId)
   }
 
-  update(collection, id, data) {
+  update(collection, { id, data, inc={} }) {
     return this.connect()
       .then(db => {
-        return db
-          .collection(collection)
-          .updateOne({ _id: ObjectId(id) }, { $set: data }, { upsert: true })
+        if(Object.keys(inc).length)
+          return db
+            .collection(collection)
+            .updateOne({ _id: ObjectId(id) }, { $inc: inc, $set: data }, { upsert: true })
+        else
+          return db
+            .collection(collection)
+            .updateOne({ _id: ObjectId(id) }, { $set: data }, { upsert: true })
       })
       .then(result => result.upsertedId || id)
   }

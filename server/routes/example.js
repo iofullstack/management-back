@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => {
   //const { _id, skip, limit, category } = req.query
 
   try {
-    //const data = await exampleService.getExamples({ _id, skip, limit, category })
+    //const data = await exampleService.getExamples({ _id, field, skip, limit })
     const test = await exampleService.test()
 
     res.status(200).json(test)
@@ -34,11 +34,11 @@ router.post('/', async (req, res, next) => {
 })
 
 router.put('/:exampleId', async (req, res, next) => {
-    const { exampleId } = req.params
-    const { body: example } = req
+    const { id } = req.params
+    const { body: data } = req
 
     try {
-      const updatedExample = await exampleService.updateExample({ exampleId, example })
+      const updatedExample = await exampleService.updateExample({ id, data })
     
       res.status(200).json({
         data: updatedExample,

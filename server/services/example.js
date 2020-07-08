@@ -27,11 +27,11 @@ class Examples {
     return createExampleId
   }
 
-  async updateExample({ exampleId, example }) {
+  async updateExample({ id, data }) {
     const updateExampleId = await this.mongoDB.update(
       this.collection,
-      exampleId,
-      example
+      id,
+      data
     )
     return updateExampleId
   }
