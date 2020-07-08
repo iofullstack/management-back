@@ -11,10 +11,15 @@ class Examples {
     return test || {}
   }
 
-  async getExamples({ _id, category, skip, limit } = {}) {
-    const query = _id ? category ? { _id, category } : { _id } : category ? { category } : {}
-    const examples = await this.mongoDB.getAll(this.collection, { query, skip, limit })
-    return examples || []
+  async getExamples({ _id, field, skip, limit } = {}) {
+    const examples = []
+    if(_id)
+      examples = await this.mongoDB.get(this.collection, _id)
+    else {
+      const query = field ? { field } : {}
+      examples = await this.mongoDB.getAll(this.collection, { query, skip, limit })
+    }
+    return examples
   }
 
   async createExample({ example }) {
