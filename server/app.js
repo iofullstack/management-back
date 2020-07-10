@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import path from 'path'
 import boom from 'boom'
 
-import { productRouter } from './routes'
+import { productRouter, categoryRouter } from './routes'
 import { config } from './config'
 import {
   logErrors,
@@ -32,6 +32,7 @@ if (config.dev) {
 app.use('/static', express.static(path.join(__dirname, 'public')))
 
 // Routes
+app.use('/api/category', categoryRouter)
 app.use('/api/products', productRouter)
 
 // Redirect
