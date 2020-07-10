@@ -14,8 +14,7 @@ class Products {
     else {
       if(fields['tags'])
         fields['tags'] = { $in: fields['tags'] }
-      console.log(fields)
-      data = await this.mongoDB.getAll(this.collection, { fields, skip, limit })
+      data = await this.mongoDB.getAll(this.collection, { query: fields, skip, limit })
     }
     return data
   }
