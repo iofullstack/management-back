@@ -6,10 +6,10 @@ const productService = new ProductService()
 const router = express.Router()
 
 router.get('/', async (req, res, next) => {
-  const { id, skip, limit, category } = req.query
+  const { id, skip, limit, ...fields } = req.query
 
   try {
-    const data = await productService.getProduct({ id, skip, limit, category })
+    const data = await productService.getProduct({ id, skip, limit, fields })
 
     res.status(200).json({
       message: 'Products litened',
