@@ -11,7 +11,7 @@ const debug = Debug('app:mongodb'),
 
 class MongoLib {
   constructor() {
-    const options = {
+    /*const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: false,
@@ -21,6 +21,11 @@ class MongoLib {
       serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
       socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
       family: 4 // Use IPv4, skip trying IPv6
+    }*/
+    debug(MONGO_URI)
+    const options = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     }
     this.client = new MongoClient(MONGO_URI, options)
     this.dbName = DB_NAME
