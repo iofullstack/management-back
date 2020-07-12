@@ -1,4 +1,5 @@
-const MongoLib = require('../lib/mongo')
+import MongoLib from '../lib/mongo'
+import { ConversionService } from './'
 
 class Unit {
   constructor() {
@@ -13,6 +14,11 @@ class Unit {
   async createUnit({ unit }) {
     const createUnitId = await this.mongoDB.create(this.collection, unit)
     return createUnitId
+  }
+
+  async addConversion({ id, projection }) {
+    const conversion = await getConversion({ id, projection })
+
   }
 
   async updateUnit({ id, data }) {
