@@ -1,8 +1,8 @@
-const express = require('express')
+import express from 'express'
 
-const { ConversionService } = require('../services')
+import { ConversionService } from '../services'
 
-const conversionService = new ConversionService();
+const conversionService = new ConversionService()
 const router = express.Router()
 
 router.post('/', async (req, res, next) => {
