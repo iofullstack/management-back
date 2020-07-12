@@ -1,4 +1,4 @@
-const MongoLib = require('../lib/mongo')
+import MongoLib from '../lib/mongo'
 
 class Example {
   constructor() {

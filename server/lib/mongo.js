@@ -62,9 +62,9 @@ class MongoLib {
     })
   }
 
-  get(collection, id) {
+  get(collection, id, projection={}) {
     return this.connect().then(db => {
-      return db.collection(collection).findOne({ _id: ObjectId(id) })
+      return db.collection(collection).findOne({ _id: ObjectId(id) }, projection)
     })
   }
 
@@ -99,6 +99,36 @@ class MongoLib {
           .deleteOne({ _id: ObjectId(id) })
       })
       .then(_ => id)
+  }
+
+  add(collection, id, field) {
+    return this.connect()
+      .then(db => {
+        return db
+          .collection(collection)
+          .updateOne({ _id: ObjectId(id) }, {'$addToSet': field})
+      })
+      .then(result => result.upsertedId || id)
+  }
+
+  remove(collection, id, field) {
+    return this.connect()
+      .then(db => {
+        return db
+          .collection(collection)
+          .updateOne({ _id: ObjectId(id) }, {'$pull': field})
+      })
+      .then(result => result.upsertedId || id)
+  }
+
+  deleteAllField(collection, query) {
+    return this.connect()
+      .then(db => {
+        return db
+          .collection(collection)
+          .deleteMany(query)
+      })
+      .then(result => result)
   }
 }
 
