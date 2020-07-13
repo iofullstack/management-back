@@ -1,11 +1,9 @@
 import MongoLib from '../lib/mongo'
-import Conversion from './conversion'
 
 class Unit {
   constructor() {
     this.collection = 'units'
     this.mongoDB = new MongoLib()
-    this.conversionService = new Conversion()
   }
 
   async getUnits() {
@@ -17,11 +15,6 @@ class Unit {
     return createUnitId
   }
 
-  async addConversion({ unitId, conversionId }) {
-    const res = await this.mongoDB.add(this.collection, unitId, { unit: conversionId })
-    return res
-  }
-
   async updateUnit({ id, data }) {
     const updateUnitId = await this.mongoDB.update(this.collection, { id, data })
     return updateUnitId
@@ -29,12 +22,13 @@ class Unit {
 
   async deleteUnit(id) {
     const deletedUnitId = await this.mongoDB.delete(this.collection, id)
-    const res = await this.conversionService.deleteAllConversion(deletedUnitId)
+    const res = await deleteAllConversion(deletedUnitId)
     return res
   }
-  
-  async removeConversion({ unitId, conversionId }) {
-    const res = await this.mongoDB.remove(this.collection, unitId, { unit: conversionId })
+
+  async deleteAllConversion(unitId) {
+    const deleted = await this.mongoDB.deleteAllField('conversion', { unit: unitId })
+    return deleted
   }
 }
 
