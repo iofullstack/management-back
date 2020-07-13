@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { UnitService } = from '../services'
+import { UnitService } from '../services'
 
 const unitService = new UnitService(),
       router = express.Router()
