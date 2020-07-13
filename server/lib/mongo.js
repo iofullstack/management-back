@@ -101,6 +101,24 @@ class MongoLib {
       .then(_ => id)
   }
 
+  populate(list, field, { match, array=false }={}) {
+    if (array)
+      list.forEach(el => {
+        el[field] = this.connect().then(db => {
+          return db
+            .collection(match)
+            .find({ _id: {$in: el[field]} })
+            .toArray()
+        })
+      })
+    else
+      list.forEach(el => {
+        el[field] = this.connect().then(db => {
+          return db.collection(match).findOne({ _id: ObjectId(el[field]) })
+        })
+      })
+  }
+
   add(collection, id, field) {
     return this.connect()
       .then(db => {
