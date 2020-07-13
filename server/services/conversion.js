@@ -5,7 +5,7 @@ class Conversion {
   constructor() {
     this.collection = 'conversion'
     this.mongoDB = new MongoLib()
-    this.unitService = new UnitService()
+    this.unitService = new Unit()
   }
 
   async createConversion({ unitId, conversion }) {
