@@ -24,7 +24,7 @@ class Conversion {
   }
 
   async addConversion({ unitId, conversionId }) {
-    const res = await this.mongoDB.add('units', unitId, { unit: conversionId })
+    const res = await this.mongoDB.add('units', unitId, { conversions: conversionId })
     return res
   }
 
