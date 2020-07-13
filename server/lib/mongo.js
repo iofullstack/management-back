@@ -101,9 +101,9 @@ class MongoLib {
       .then(_ => id)
   }
 
-  async populate(list, field, { match, array=false }={}) {
+  populate(list, field, { match, array=false }={}) {
     if (array)
-      list.forEach(el => {
+      list.forEach(async el => {
         el[field] = await this.connect().then(db => {
           return db
             .collection(match)
@@ -113,8 +113,8 @@ class MongoLib {
         debug(el)
       })
     else
-      list.forEach(el => {
-        el[field] = this.connect().then(db => {
+      list.forEach(async el => {
+        el[field] = await this.connect().then(db => {
           return db.collection(match).findOne({ _id: ObjectId(el[field]) })
         })
       })
