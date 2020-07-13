@@ -1,7 +1,7 @@
 import MongoLib from '../lib/mongo'
-import { ConversionService } from './'
+import Conversion from './conversion'
 
-const conversionService = new ConversionService()
+const conversionService = new Conversion()
 
 class Unit {
   constructor() {
