@@ -1,6 +1,8 @@
 import MongoLib from '../lib/mongo'
 import { ConversionService } from './'
 
+const conversionService = new ConversionService()
+
 class Unit {
   constructor() {
     this.collection = 'units'
@@ -16,9 +18,9 @@ class Unit {
     return createUnitId
   }
 
-  async addConversion({ id, projection }) {
-    const conversion = await getConversion({ id, projection })
-
+  async addConversion({ unitId, conversionId }) {
+    const res = await this.mongoDB.add(this.collection, unitId, { unit: conversionId })
+    return res
   }
 
   async updateUnit({ id, data }) {
@@ -28,7 +30,12 @@ class Unit {
 
   async deleteUnit(id) {
     const deletedUnitId = await this.mongoDB.delete(this.collection, id)
-    return deletedUnitId
+    const res = await conversionService.deleteAllConversion(deletedUnitId)
+    return res
+  }
+  
+  async removeConversion({ unitId, conversionId }) {
+    const res = await this.mongoDB.remove(this.collection, unitId, { unit: conversionId })
   }
 }
 

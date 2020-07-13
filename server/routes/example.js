@@ -1,8 +1,8 @@
-const express = require('express')
+import express from 'express'
 
-const { ExampleService } = require('../services')
+import { ExampleService } from '../services'
 
-const exampleService = new ExampleService();
+const exampleService = new ExampleService()
 const router = express.Router()
 
 router.get('/', async (req, res, next) => {

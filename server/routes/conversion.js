@@ -1,15 +1,15 @@
-const express = require('express')
+import express from 'express'
 
-const { ConversionService } = require('../services')
+import { ConversionService } from '../services'
 
-const conversionService = new ConversionService();
-const router = express.Router()
+const conversionService = new ConversionService(),
+      router = express.Router()
 
 router.post('/', async (req, res, next) => {
-  const { body: conversion } = req
+  const { body: { unitId, conversion } } = req
 
   try {
-    const data = await conversionService.createConversion({ conversion })
+    const data = await conversionService.createConversion({ unitId, conversion })
   
     res.status(201).json({
       message: 'Conversion created',
