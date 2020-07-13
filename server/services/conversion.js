@@ -8,7 +8,7 @@ class Conversion {
 
   async createConversion({ unitId, conversion }) {
     const conversionId = await this.mongoDB.create(this.collection, conversion)
-    const res = await addConversion({ unitId, conversionId })
+    const res = await this.addConversion({ unitId, conversionId })
     return res
   }
 
