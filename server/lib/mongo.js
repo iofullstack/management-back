@@ -102,26 +102,24 @@ class MongoLib {
   }
 
   async populate(list, field, { match, array=false }={}) {
+    console.log(list)
     if (array)
-      await list.forEach(async (el, i) => {
-        if (el[field]) {
+      for (const el of list) {
+        if (el[field])
           el[field] = await this.connect().then(db => {
             return db
               .collection(match)
               .find({ _id: {$in: el[field]} })
               .toArray()
           })
-          debug(el)
-        }
-      })
+      }
     else
-      await list.forEach(async (el, i) => {
+      for (const el of list) {
         if (el[field])
           el[field] = await this.connect().then(db => {
             return db.collection(match).findOne({ _id: ObjectId(el[field]) })
           })
-      })
-    debug(list)
+      }
   }
 
   add(collection, id, field) {

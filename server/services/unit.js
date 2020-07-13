@@ -9,6 +9,9 @@ class Unit {
   async getUnits() {
     const units = await this.mongoDB.getAll(this.collection)
     await this.mongoDB.populate(units, 'conversions', { match:'conversion', array:true })
+    for(const unit of units)
+      if (unit['conversions'])
+        await this.mongoDB.populate(unit['conversions'], 'unit', { match:'units' })
     return units
   }
 
