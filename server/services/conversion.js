@@ -1,5 +1,5 @@
 import MongoLib from '../lib/mongo'
-import Unit from './unit'
+import { default as Unit } from './unit'
 
 const unitService = new Unit()
 
