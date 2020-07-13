@@ -1,17 +1,16 @@
 import MongoLib from '../lib/mongo'
-import { UnitService } from '../services/'
-
-const unitService = new UnitService()
+import Unit from './unit'
 
 class Conversion {
   constructor() {
     this.collection = 'conversion'
     this.mongoDB = new MongoLib()
+    this.unitService = new UnitService()
   }
 
   async createConversion({ unitId, conversion }) {
     const conversionId = await this.mongoDB.create(this.collection, conversion)
-    const res = await unitService.addConversion({ unitId, conversionId })
+    const res = await this.unitService.addConversion({ unitId, conversionId })
     return res
   }
 
@@ -21,7 +20,7 @@ class Conversion {
   }
 
   async deleteConversion(unitId, conversionId) {
-    const id = await unitService.removeConversion({ unitId, conversionId })
+    const id = await this.unitService.removeConversion({ unitId, conversionId })
     const deletedConversionId = await this.mongoDB.delete(this.collection, id)
     return deletedConversionId
   }
