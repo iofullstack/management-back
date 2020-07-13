@@ -22,7 +22,7 @@ class Unit {
 
   async deleteUnit(id) {
     const deletedUnitId = await this.mongoDB.delete(this.collection, id)
-    const res = await deleteAllConversion(deletedUnitId)
+    const res = await this.deleteAllConversion(deletedUnitId)
     return res
   }
 

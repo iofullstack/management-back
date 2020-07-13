@@ -18,7 +18,7 @@ class Conversion {
   }
 
   async deleteConversion(unitId, conversionId) {
-    const id = await removeConversion({ unitId, conversionId })
+    const id = await this.removeConversion({ unitId, conversionId })
     const deletedConversionId = await this.mongoDB.delete(this.collection, id)
     return deletedConversionId
   }
