@@ -19,7 +19,7 @@ class Unit {
   }
 
   async addConversion({ unitId, conversionId }) {
-    const res = await this.mongoDB.add(this.collection, unitId, conversionId)
+    const res = await this.mongoDB.add(this.collection, unitId, { unit: conversionId })
     return res
   }
 
@@ -35,7 +35,7 @@ class Unit {
   }
   
   async removeConversion({ unitId, conversionId }) {
-    const res = await this.mongoDB.remove(this.collection, unitId, conversionId)
+    const res = await this.mongoDB.remove(this.collection, unitId, { unit: conversionId })
   }
 }
 

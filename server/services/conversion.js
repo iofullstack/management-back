@@ -28,6 +28,7 @@ class Conversion {
   
   async deleteAllConversion(unitId) {
     const deleted = await this.mongoDB.deleteAllField(this.collection, { unit: unitId })
+    return deleted
   }
 }
 
