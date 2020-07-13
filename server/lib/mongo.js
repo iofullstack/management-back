@@ -101,15 +101,16 @@ class MongoLib {
       .then(_ => id)
   }
 
-  populate(list, field, { match, array=false }={}) {
+  async populate(list, field, { match, array=false }={}) {
     if (array)
       list.forEach(el => {
-        el[field] = this.connect().then(db => {
+        el[field] = await this.connect().then(db => {
           return db
             .collection(match)
             .find({ _id: {$in: el[field]} })
             .toArray()
         })
+        debug(el)
       })
     else
       list.forEach(el => {
