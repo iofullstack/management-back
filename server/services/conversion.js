@@ -29,7 +29,7 @@ class Conversion {
   }
 
   async removeConversion({ unitId, conversionId }) {
-    const res = await this.mongoDB.remove('units', unitId, { unit: conversionId })
+    const res = await this.mongoDB.remove('units', unitId, { conversions: conversionId })
   }
 }
 
