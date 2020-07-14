@@ -37,12 +37,12 @@ router.put('/:id', async (req, res, next) => {
   }
 )
 
-router.delete('/:id', async (req, res, next) => {
-  const { id } = req.params
-  
+router.delete('/:id/unit/:unitId/', async (req, res, next) => {
+  const { id, unitId } = req.params
+
   try {
-    const data = await conversionService.deleteConversion(id)
-  
+    const data = await conversionService.deleteConversion(unitId, id)
+
     res.status(200).json({
       message: 'Conversion deleted',
       data
