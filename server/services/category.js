@@ -16,7 +16,7 @@ class Category {
   }
 
   async updateCategory({ id, data }) {
-    const updateCategoryId = await this.mongoDB.update(this.collection, { id, data })
+    const updateCategoryId = await this.mongoDB.update(this.collection, id, data)
     return updateCategoryId
   }
 

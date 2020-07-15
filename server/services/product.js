@@ -27,7 +27,7 @@ class Products {
 
   async updateProduct({ id, data }) {
     console.log(id, data)
-    const updateProductId = await this.mongoDB.update(this.collection, { id, data })
+    const updateProductId = await this.mongoDB.update(this.collection, id, data)
     return updateProductId
   }
 
