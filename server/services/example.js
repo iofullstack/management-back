@@ -12,6 +12,7 @@ class Example {
   }
 
   async getExamples({ id, skip, limit, field } = {}) {
+    // Return array
     const data = []
     if(id)
       data = await this.mongoDB.get(this.collection, id)
@@ -23,18 +24,18 @@ class Example {
   }
 
   async createExample({ _data }) {
-    const createExampleId = await this.mongoDB.create(this.collection, _data)
-    return createExampleId
+    // Return ExampleId
+    return await this.mongoDB.create(this.collection, _data)
   }
 
   async updateExample({ id, data }) {
-    const updateExampleId = await this.mongoDB.update(this.collection, id, data)
-    return updateExampleId
+    // Return ExampleId
+    return await this.mongoDB.update(this.collection, id, data)
   }
 
   async deleteExample(id) {
-    const deletedExampleId = await this.mongoDB.delete(this.collection, id)
-    return deletedExampleId
+    // Return deletedExampleId
+    return await this.mongoDB.delete(this.collection, id)
   }
 }
 
