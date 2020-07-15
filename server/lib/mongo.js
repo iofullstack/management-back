@@ -11,17 +11,6 @@ const debug = Debug('app:mongodb'),
 
 class MongoLib {
   constructor() {
-    /*const options = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: false,
-      useFindAndModify: false,
-      autoIndex: false, // Don't build indexes
-      poolSize: 10, // Maintain up to 10 socket connections
-      serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-      family: 4 // Use IPv4, skip trying IPv6
-    }*/
     debug(MONGO_URI)
     const options = {
       useNewUrlParser: true,
@@ -34,9 +23,8 @@ class MongoLib {
   connect() {
     return new Promise((resolve, reject) => {
       this.client.connect(error => {
-        if(error) {
+        if(error)
           reject(error)
-        }
         debug('Connected succesfully to mongo')
         resolve(this.client.db(this.dbName))
       })
@@ -51,11 +39,11 @@ class MongoLib {
     })
   }
 
-  getAll(collection, { query={}, skip=0, limit=0 } = {}) {
+  getAll(collection, { query={}, skip=0, limit=0, projection={} } = {}) {
     return this.connect().then(db => {
       return db
         .collection(collection)
-        .find(query)
+        .find(query, projection)
         .skip(skip)
         .limit(limit)
         .toArray()
@@ -76,7 +64,7 @@ class MongoLib {
       .then(result => result.insertedId)
   }
 
-  update(collection, { id, data, inc={} }) {
+  update(collection, id, data, inc={}) {
     return this.connect()
       .then(db => {
         if(Object.keys(inc).length)
@@ -101,10 +89,9 @@ class MongoLib {
       .then(_ => id)
   }
 
-  async populate(list, field, { match, array=false }={}) {
-    console.log(list)
+  async populate(list, field, match, array=false) {
     if (array)
-      for (const el of list) {
+      for (const el of list)
         if (el[field])
           el[field] = await this.connect().then(db => {
             return db
@@ -112,14 +99,12 @@ class MongoLib {
               .find({ _id: {$in: el[field]} })
               .toArray()
           })
-      }
     else
-      for (const el of list) {
+      for (const el of list)
         if (el[field])
           el[field] = await this.connect().then(db => {
             return db.collection(match).findOne({ _id: ObjectId(el[field]) })
           })
-      }
   }
 
   add(collection, id, field) {
@@ -127,29 +112,32 @@ class MongoLib {
       .then(db => {
         return db
           .collection(collection)
-          .updateOne({ _id: ObjectId(id) }, {'$addToSet': field})
+          .updateOne({ _id: ObjectId(id) }, { $addToSet: field })
       })
       .then(result => result.upsertedId || id)
   }
 
-  remove(collection, id, field) {
+  remove(collection, id, key, value) {
+    console.log(collection, id, key, value)
     return this.connect()
       .then(db => {
+        const obj = {}
+        obj[key] = ObjectId(value)
         return db
           .collection(collection)
-          .updateOne({ _id: ObjectId(id) }, {'$pull': field})
+          .updateOne({ _id: ObjectId(id) }, { $pull: obj })
       })
-      .then(result => result.upsertedId || id)
+      .then(result => result.modifiedCount)
   }
 
-  deleteAllField(collection, query) {
+  deleteAllByField(collection, query) {
     return this.connect()
       .then(db => {
         return db
           .collection(collection)
           .deleteMany(query)
       })
-      .then(result => result)
+      .then(result => result.deletedCount)
   }
 }
 
