@@ -43,7 +43,8 @@ class MongoLib {
     return this.connect().then(db => {
       return db
         .collection(collection)
-        .find(query, projection)
+        .find(query)
+        .project(projection)
         .skip(skip)
         .limit(limit)
         .toArray()
@@ -52,7 +53,7 @@ class MongoLib {
 
   get(collection, id, projection={}) {
     return this.connect().then(db => {
-      return db.collection(collection).findOne({ _id: ObjectId(id) }, projection)
+      return db.collection(collection).findOne({ _id: ObjectId(id) }, { projection })
     })
   }
 
@@ -89,22 +90,26 @@ class MongoLib {
       .then(_ => id)
   }
 
-  async populate(list, field, match, array=false) {
-    if (array)
+  async populate(list, field, match, { projection={}, array=false }={}) {
+    if (array) {
       for (const el of list)
         if (el[field])
           el[field] = await this.connect().then(db => {
             return db
               .collection(match)
               .find({ _id: {$in: el[field]} })
+              .project(projection)
               .toArray()
           })
-    else
+    }
+    else {
       for (const el of list)
-        if (el[field])
+        if (el[field]) {
           el[field] = await this.connect().then(db => {
-            return db.collection(match).findOne({ _id: ObjectId(el[field]) })
+            return db.collection(match).findOne({ _id: ObjectId(el[field]) }, { projection })
           })
+        }
+    }
   }
 
   add(collection, id, field) {
@@ -117,15 +122,12 @@ class MongoLib {
       .then(result => result.upsertedId || id)
   }
 
-  remove(collection, id, key, value) {
-    console.log(collection, id, key, value)
+  remove(collection, id, field) {
     return this.connect()
       .then(db => {
-        const obj = {}
-        obj[key] = ObjectId(value)
         return db
           .collection(collection)
-          .updateOne({ _id: ObjectId(id) }, { $pull: obj })
+          .updateOne({ _id: ObjectId(id) }, { $pull: field })
       })
       .then(result => result.modifiedCount)
   }
