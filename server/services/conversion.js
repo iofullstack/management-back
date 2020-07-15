@@ -8,8 +8,7 @@ class Conversion {
 
   async createConversion({ unitId, conversion }) {
     const conversionId = await this.mongoDB.create(this.collection, conversion)
-    const res = await this.addConversion({ unitId, conversionId })
-    return res
+    return await this.addConversion({ unitId, conversionId })
   }
 
   async updateConversion({ id, data }) {
@@ -18,18 +17,19 @@ class Conversion {
   }
 
   async deleteConversion(unitId, conversionId) {
-    const id = await this.removeConversion({ unitId, conversionId })
-    const deletedConversionId = await this.mongoDB.delete(this.collection, id)
+    const modify = await this.removeConversion({ unitId, conversionId })
+    let deletedConversionId = ''
+    if(modify)
+      deletedConversionId = await this.mongoDB.delete(this.collection, conversionId)
     return deletedConversionId
   }
 
-  async addConversion({ unitId, conversionId }) {
-    const res = await this.mongoDB.add('units', unitId, { conversions: conversionId })
-    return res
+  addConversion({ unitId, conversionId }) {
+    return this.mongoDB.add('units', unitId, { conversions: conversionId })
   }
 
-  async removeConversion({ unitId, conversionId }) {
-    const res = await this.mongoDB.remove('units', unitId, { conversions: conversionId })
+  removeConversion({ unitId, conversionId }) {
+    return this.mongoDB.remove('units', unitId, 'conversions', conversionId)
   }
 }
 

@@ -26,14 +26,24 @@ class Unit {
   }
 
   async deleteUnit(id) {
-    const deletedUnitId = await this.mongoDB.delete(this.collection, id)
-    const res = await this.deleteAllConversion(deletedUnitId)
-    return res
+    const units = await this.mongoDB.getAll(this.collection)
+    let deleted = ''
+    let deletedUnitId = ''
+    await this.mongoDB.populate(units, 'conversions', { match:'conversion', array:true })
+    for(const unit of units)
+      if (unit['conversions'])
+        for(const conversion of unit['conversions'])
+          if (conversion['unit'] == id)
+            deleted = await this.mongoDB.remove('units', unit['_id'], 'conversions', conversion['_id'])
+    if (deleted)
+      deleted = await this.deleteAllConversion(id)
+    if (deleted)
+      deletedUnitId = await this.mongoDB.delete(this.collection, id)
+    return deletedUnitId
   }
 
-  async deleteAllConversion(unitId) {
-    const deleted = await this.mongoDB.deleteAllField('conversion', { unit: unitId })
-    return deleted
+  deleteAllConversion(unitId) {
+    return this.mongoDB.deleteAllByField('conversion', { unit: unitId })
   }
 }
 
