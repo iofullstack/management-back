@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb'
 import MongoLib from '../lib/mongo'
 
 class Unit {
@@ -8,7 +9,11 @@ class Unit {
 
   async getUnits() {
     // Return array
-    return await this.mongoDB.getAll(this.collection)
+    const units = await this.mongoDB.getAll(this.collection)
+    for (const unit of units)
+      if (unit['conversions'])
+        await this.mongoDB.populate(unit['conversions'], 'unit', 'units', { projection:{symbol:1} })
+    return units
   }
 
   async createUnit(unit) {
@@ -22,8 +27,17 @@ class Unit {
   }
 
   async deleteUnit(id) {
-    // Return UnitId deleted
-    return await this.mongoDB.delete(this.collection, id)
+    // Return deletedUnitId and modifiedCount
+    const units = await this.mongoDB.getAll(this.collection)
+    let modifiedCount = 0
+    let deletedUnitId = ''
+    for(const unit of units)
+      if (unit['conversions'])
+        for(const conversion of unit['conversions'])
+          if (conversion['unit'] === id)
+            modifiedCount = await this.mongoDB.remove(this.collection, unit['_id'], { conversions: {_id: ObjectId(conversion['_id'])} })
+    deletedUnitId = await this.mongoDB.delete(this.collection, id)
+    return { deletedUnitId, modifiedCount }
   }
 }
 
