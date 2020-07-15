@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import path from 'path'
 import boom from 'boom'
 
-import { unitRouter, conversionRouter } from './routes'
+import { unitRouter } from './routes'
 import { config } from './config'
 import {
   logErrors,
@@ -33,7 +33,6 @@ app.use('/static', express.static(path.join(__dirname, 'public')))
 
 // Routes
 app.use('/api/units', unitRouter)
-app.use('/api/conversion', conversionRouter)
 
 // Redirect
 app.get('/', (req, res, next) => {

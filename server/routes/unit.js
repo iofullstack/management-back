@@ -10,7 +10,7 @@ router.get('/', async (req, res, next) => {
     const data = await unitService.getUnits()
 
     res.status(200).json({
-      message: 'Unit litened',
+      message: 'Units litened',
       data
     })
   } catch(err) {
@@ -22,7 +22,7 @@ router.post('/', async (req, res, next) => {
   const { body: unit } = req
 
   try {
-    const data = await unitService.createUnit({ unit })
+    const data = await unitService.createUnit(unit)
   
     res.status(201).json({
       message: 'Unit created',
@@ -38,7 +38,7 @@ router.put('/:id', async (req, res, next) => {
     const { body: unit } = req
 
     try {
-      const data = await unitService.updateUnit({ id, data: unit })
+      const data = await unitService.updateUnit(id, unit)
     
       res.status(200).json({
         message: 'Unit updated',
