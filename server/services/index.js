@@ -1,1 +1,1 @@
-export { default as ExampleService } from './example'
+export { default as BuyService } from './buy'
